@@ -1,0 +1,608 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Kalpurush";
+  src: url("/fonts/kalpurush.ttf") format("truetype");
+  /* Single weight ONLY — never claim 400-700 coverage, or the browser uses
+     this regular file as-is for <strong>/<th>/<h*> and bold looks dead.
+     With 400 declared, the browser synthesizes real-looking bold. */
+  font-weight: 400;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Kalpurush", "Noto Sans Bengali", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
+  --font-bengali: "Kalpurush", "Noto Sans Bengali", sans-serif;
+  --font-english: "Times New Roman", Times, serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ─── Light Mode · Warm Cream / Pastel ─────────────────────────── */
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.966 0.015 85);
+  --foreground: oklch(0.27 0.024 65);
+  --card: oklch(0.99 0.008 85);
+  --card-foreground: oklch(0.27 0.024 65);
+  --popover: oklch(0.995 0.006 85);
+  --popover-foreground: oklch(0.27 0.024 65);
+  --primary: oklch(0.51 0.095 175);
+  --primary-foreground: oklch(0.985 0.005 120);
+  --secondary: oklch(0.925 0.022 85);
+  --secondary-foreground: oklch(0.32 0.03 65);
+  --muted: oklch(0.935 0.016 85);
+  --muted-foreground: oklch(0.5 0.02 75);
+  --accent: oklch(0.9 0.045 95);
+  --accent-foreground: oklch(0.3 0.03 65);
+  --destructive: oklch(0.577 0.215 27.325);
+  --border: oklch(0.885 0.018 80);
+  --input: oklch(0.87 0.02 80);
+  --ring: oklch(0.55 0.09 175);
+  --chart-1: oklch(0.52 0.1 175);
+  --chart-2: oklch(0.72 0.13 75);
+  --chart-3: oklch(0.62 0.13 35);
+  --chart-4: oklch(0.58 0.08 150);
+  --chart-5: oklch(0.55 0.09 320);
+  --sidebar: oklch(0.955 0.018 85);
+  --sidebar-foreground: oklch(0.27 0.024 65);
+  --sidebar-primary: oklch(0.51 0.095 175);
+  --sidebar-primary-foreground: oklch(0.985 0.005 120);
+  --sidebar-accent: oklch(0.92 0.025 85);
+  --sidebar-accent-foreground: oklch(0.3 0.03 65);
+  --sidebar-border: oklch(0.885 0.018 80);
+  --sidebar-ring: oklch(0.55 0.09 175);
+  --glass-tint: oklch(0.99 0.008 85 / 66%);
+  --glass-border: oklch(0.6 0.02 80 / 14%);
+  --glow: oklch(0.52 0.095 175 / 32%);
+  --bg-blob-1: oklch(0.6 0.1 175 / 16%);
+  --bg-blob-2: oklch(0.78 0.11 80 / 22%);
+  --bg-blob-3: oklch(0.72 0.09 40 / 12%);
+}
+
+/* ─── Dark Mode · Deep Slate / Charcoal ────────────────────────── */
+.dark {
+  --background: oklch(0.17 0.012 250);
+  --foreground: oklch(0.93 0.008 90);
+  --card: oklch(0.213 0.013 250);
+  --card-foreground: oklch(0.93 0.008 90);
+  --popover: oklch(0.225 0.014 250);
+  --popover-foreground: oklch(0.93 0.008 90);
+  --primary: oklch(0.76 0.125 168);
+  --primary-foreground: oklch(0.2 0.03 200);
+  --secondary: oklch(0.26 0.014 250);
+  --secondary-foreground: oklch(0.92 0.008 90);
+  --muted: oklch(0.255 0.013 250);
+  --muted-foreground: oklch(0.66 0.012 250);
+  --accent: oklch(0.29 0.016 250);
+  --accent-foreground: oklch(0.93 0.008 90);
+  --destructive: oklch(0.68 0.18 25);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 13%);
+  --ring: oklch(0.76 0.125 168);
+  --chart-1: oklch(0.76 0.125 168);
+  --chart-2: oklch(0.8 0.13 80);
+  --chart-3: oklch(0.72 0.14 40);
+  --chart-4: oklch(0.74 0.1 150);
+  --chart-5: oklch(0.72 0.1 320);
+  --sidebar: oklch(0.195 0.013 250);
+  --sidebar-foreground: oklch(0.93 0.008 90);
+  --sidebar-primary: oklch(0.76 0.125 168);
+  --sidebar-primary-foreground: oklch(0.2 0.03 200);
+  --sidebar-accent: oklch(0.26 0.015 250);
+  --sidebar-accent-foreground: oklch(0.93 0.008 90);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.76 0.125 168);
+  --glass-tint: oklch(0.23 0.014 250 / 62%);
+  --glass-border: oklch(1 0 0 / 10%);
+  --glow: oklch(0.76 0.125 168 / 38%);
+  --bg-blob-1: oklch(0.55 0.09 175 / 14%);
+  --bg-blob-2: oklch(0.6 0.08 75 / 10%);
+  --bg-blob-3: oklch(0.5 0.07 330 / 9%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Kalpurush", "Noto Sans Bengali", sans-serif;
+    overflow: hidden;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 26%, transparent);
+  }
+}
+
+/* ─── Ambient background blobs ─────────────────────────────────── */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.app-bg::before,
+.app-bg::after,
+.app-bg .blob-3 {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+}
+.app-bg::before {
+  width: 44vw;
+  height: 44vw;
+  top: -14vw;
+  right: -10vw;
+  background: var(--bg-blob-1);
+}
+.app-bg::after {
+  width: 36vw;
+  height: 36vw;
+  bottom: -12vw;
+  left: -8vw;
+  background: var(--bg-blob-2);
+}
+.app-bg .blob-3 {
+  width: 26vw;
+  height: 26vw;
+  top: 38%;
+  left: 34%;
+  background: var(--bg-blob-3);
+}
+
+/* ─── Glassmorphism helpers ────────────────────────────────────── */
+.glass {
+  background: var(--glass-tint);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  border: 1px solid var(--glass-border);
+}
+.glass-strong {
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--glass-border);
+}
+.glow-ring {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 50%, transparent),
+    0 0 18px var(--glow);
+}
+.text-gradient {
+  background: linear-gradient(
+    120deg,
+    var(--primary),
+    color-mix(in oklab, var(--chart-2) 75%, var(--primary))
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ─── Custom scrollbars ────────────────────────────────────────── */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent)
+    transparent;
+}
+.scroll-slim::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+  border-radius: 999px;
+}
+.scroll-slim::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+}
+
+/* ─── Tree indent guides ───────────────────────────────────────── */
+.tree-guide {
+  position: absolute;
+  left: 0.9rem;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--border) 65%, transparent),
+    transparent
+  );
+}
+
+/* ─── Rich text editor (Tiptap / ProseMirror) ──────────────────── */
+.tiptap-wrap .ProseMirror {
+  outline: none;
+  min-height: 320px;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  caret-color: var(--primary);
+}
+.tiptap-wrap .ProseMirror p {
+  margin: 0.55em 0;
+}
+.tiptap-wrap .ProseMirror h1 {
+  font-size: 1.65em;
+  font-weight: 700;
+  margin: 0.9em 0 0.45em;
+  line-height: 1.3;
+}
+.tiptap-wrap .ProseMirror h2 {
+  font-size: 1.38em;
+  font-weight: 700;
+  margin: 0.85em 0 0.4em;
+  line-height: 1.35;
+}
+.tiptap-wrap .ProseMirror h3 {
+  font-size: 1.18em;
+  font-weight: 600;
+  margin: 0.8em 0 0.35em;
+}
+.tiptap-wrap .ProseMirror ul,
+.tiptap-wrap .ProseMirror ol {
+  padding-inline-start: 1.5rem;
+  margin: 0.5em 0;
+}
+.tiptap-wrap .ProseMirror ul {
+  list-style: disc;
+}
+.tiptap-wrap .ProseMirror ol {
+  list-style: decimal;
+}
+.tiptap-wrap .ProseMirror li {
+  margin: 0.2em 0;
+}
+.tiptap-wrap .ProseMirror li p {
+  margin: 0.15em 0;
+}
+.tiptap-wrap .ProseMirror blockquote {
+  border-inline-start: 3px solid var(--primary);
+  padding-inline-start: 1rem;
+  margin: 0.8em 0;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.tiptap-wrap .ProseMirror pre {
+  background: color-mix(in oklab, var(--muted) 80%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.85rem 1rem;
+  /* Kalpurush comes AFTER the mono fonts: Latin/code chars stay monospace,
+     while Bangla glyphs (missing in mono fonts) fall back to Kalpurush —
+     so Bangla text inside code keeps its font. */
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New",
+    "Kalpurush", "Noto Sans Bengali", monospace;
+  font-size: 0.88em;
+  margin: 0.8em 0;
+  overflow-x: auto;
+}
+.tiptap-wrap .ProseMirror code {
+  background: color-mix(in oklab, var(--muted) 75%, transparent);
+  border-radius: 0.35rem;
+  padding: 0.12em 0.4em;
+  /* Same trick as pre: monospace for Latin, Kalpurush fallback for Bangla */
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New",
+    "Kalpurush", "Noto Sans Bengali", monospace;
+  font-size: 0.86em;
+}
+.tiptap-wrap .ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+}
+.tiptap-wrap .ProseMirror a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.tiptap-wrap .ProseMirror mark {
+  border-radius: 0.25rem;
+  padding: 0.05em 0.18em;
+  color: inherit;
+}
+.tiptap-wrap .ProseMirror hr {
+  border: none;
+  border-top: 1.5px solid var(--border);
+  margin: 1.2em 0;
+}
+.tiptap-wrap .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.6rem;
+  display: block;
+  box-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 10%, transparent);
+}
+/* Resizable image node view */
+.tiptap-wrap .ProseMirror .res-img-wrap {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  line-height: 0;
+}
+.tiptap-wrap .ProseMirror .res-img-wrap .res-h {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  touch-action: none;
+  z-index: 12;
+  transition: opacity 0.12s ease;
+}
+.tiptap-wrap .ProseMirror .res-img-wrap:hover .res-h,
+.tiptap-wrap .ProseMirror .res-img-wrap.resizing .res-h,
+.tiptap-wrap .ProseMirror .res-img-wrap.ProseMirror-selectednode .res-h {
+  opacity: 1;
+}
+.tiptap-wrap .ProseMirror .res-h-nw {
+  top: -7px;
+  left: -7px;
+  cursor: nwse-resize;
+}
+.tiptap-wrap .ProseMirror .res-h-ne {
+  top: -7px;
+  right: -7px;
+  cursor: nesw-resize;
+}
+.tiptap-wrap .ProseMirror .res-h-sw {
+  bottom: -7px;
+  left: -7px;
+  cursor: nesw-resize;
+}
+.tiptap-wrap .ProseMirror .res-h-se {
+  bottom: -7px;
+  right: -7px;
+  cursor: nwse-resize;
+}
+/* Align buttons also work on images (TextAlign writes inline text-align style) */
+.tiptap-wrap .ProseMirror img[style*="text-align: center"],
+.tiptap-wrap .ProseMirror img[style*="text-align:center"] {
+  margin-inline: auto;
+}
+.tiptap-wrap .ProseMirror img[style*="text-align: right"],
+.tiptap-wrap .ProseMirror img[style*="text-align:right"] {
+  margin-inline: auto 0;
+}
+.tiptap-wrap .ProseMirror .ProseMirror-selectednode img,
+.tiptap-wrap .ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+.tiptap-wrap .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: color-mix(in oklab, var(--muted-foreground) 65%, transparent);
+}
+/* Tables */
+.tiptap-wrap .ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0.9em 0;
+  overflow: hidden;
+  /* Bulletproof: table text ALWAYS follows the editor font (Kalpurush/Times)
+     — never falls back to the UI font in any browser or view. */
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.tiptap-wrap .ProseMirror table td,
+.tiptap-wrap .ProseMirror table th {
+  border: 1.5px solid color-mix(in oklab, var(--border) 92%, var(--muted-foreground));
+  padding: 0.45rem 0.65rem;
+  vertical-align: top;
+  position: relative;
+  font-family: inherit;
+}
+/* Paste from Word/Google Docs/Websites carries inline font-family inside
+   cells (<td style="font-family:…"> or wrapped <span style="font-family:…">)
+   — that is why table text looked non-Kalpurush. !important beats inline
+   styles, so EVERY descendant of a cell is forced back onto the editor font. */
+.tiptap-wrap .ProseMirror table td,
+.tiptap-wrap .ProseMirror table th,
+.tiptap-wrap .ProseMirror table td *,
+.tiptap-wrap .ProseMirror table th * {
+  font-family: inherit !important;
+}
+/* …except code inside tables keeps the mono-first stack
+   (Bangla glyphs inside code still fall back to Kalpurush). */
+.tiptap-wrap .ProseMirror table code,
+.tiptap-wrap .ProseMirror table pre {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New",
+    "Kalpurush", "Noto Sans Bengali", monospace !important;
+}
+.tiptap-wrap .ProseMirror table th {
+  background: color-mix(in oklab, var(--primary) 9%, transparent);
+  font-weight: 600;
+  text-align: start;
+}
+.tiptap-wrap .ProseMirror table .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--primary) 14%, transparent);
+  pointer-events: none;
+}
+.tiptap-wrap .ProseMirror table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background: var(--primary);
+  pointer-events: none;
+}
+.tiptap-wrap .ProseMirror.resize-cursor {
+  cursor: col-resize;
+}
+.tiptap-wrap .ProseMirror table p {
+  margin: 0;
+}
+/* Task lists */
+.tiptap-wrap .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-inline-start: 0.25rem;
+}
+.tiptap-wrap .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.tiptap-wrap .ProseMirror ul[data-type="taskList"] li > label {
+  margin-top: 0.32em;
+  flex-shrink: 0;
+}
+.tiptap-wrap .ProseMirror ul[data-type="taskList"] input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+.tiptap-wrap .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+}
+
+/* Font families inside editor content */
+.editor-font-kalpurush .ProseMirror {
+  font-family: "Kalpurush", "Noto Sans Bengali", sans-serif;
+}
+.editor-font-times .ProseMirror {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1.08rem;
+}
+
+/* ─── Preview pane for documents ───────────────────────────────── */
+.doc-preview-body {
+  font-family: "Kalpurush", "Noto Sans Bengali", "Times New Roman", serif;
+  line-height: 1.8;
+}
+.doc-preview-body h1,
+.doc-preview-body h2,
+.doc-preview-body h3 {
+  font-weight: 700;
+  margin: 0.8em 0 0.4em;
+}
+.doc-preview-body table {
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+.doc-preview-body td,
+.doc-preview-body th {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.6rem;
+}
+.doc-preview-body p {
+  margin: 0.55em 0;
+}
+.doc-preview-body img {
+  max-width: 100%;
+}
+
+/* ─── Subtle floating animation for hero elements ─────────────── */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+/* ─── Explanation rich-text editor + preview (flashcards / MCQ) ── */
+.expl-edit .ProseMirror {
+  min-height: 150px;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  padding: 0.75rem 0.9rem;
+}
+.expl-view .ProseMirror {
+  min-height: 0;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  padding: 0;
+}
+.expl-view .ProseMirror > :first-child {
+  margin-top: 0;
+}
+.expl-view .ProseMirror > :last-child {
+  margin-bottom: 0;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--glow);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+.pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+
+/* Radix ScrollArea viewport wraps children in an inline `display:table` div,
+   which shrink-to-fits content and stops rows from truncating — deep tree-row
+   action buttons (delete etc.) then overflow and get clipped. Force block. */
+[data-slot="scroll-area-viewport"] > div {
+  display: block !important;
+  min-width: 100%;
+}

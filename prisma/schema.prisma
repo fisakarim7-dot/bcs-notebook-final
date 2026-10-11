@@ -1,0 +1,446 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 6-level tree: Subject → Part → Topic → Sub-topic → Section → Leaf Note
+// type: "folder" (container) | "note" (leaf workspace)
+model TreeNode {
+  id        String     @id @default(cuid())
+  name      String
+  type      String     @default("folder")
+  order     Int        @default(0)
+  parentId  String?
+  parent    TreeNode?  @relation("TreeNodeParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children  TreeNode[] @relation("TreeNodeParent")
+  note      Note?
+  noteItems NoteItem[] @relation("NoteItems")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Note {
+  id         String     @id @default(cuid())
+  content    String     @default("")
+  font       String     @default("kalpurush") // "kalpurush" | "times"
+  completed  Boolean    @default(false)
+  readCount  Int        @default(0)
+  lastReadAt DateTime?
+  nodeId     String     @unique
+  node       TreeNode   @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  documents  Document[]
+  links      Link[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+// Multiple standalone note cards per tree node (new per-item reading model)
+model NoteItem {
+  id         String    @id @default(cuid())
+  title      String    @default("")
+  content    String    @default("")
+  font       String    @default("kalpurush")
+  nodeId     String
+  node       TreeNode  @relation("NoteItems", fields: [nodeId], references: [id], onDelete: Cascade)
+  readCount  Int       @default(0)
+  lastReadAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Document {
+  id         String    @id @default(cuid())
+  name       String
+  ext        String // pdf | docx | html | txt
+  mime       String
+  size       Int
+  path       String
+  readCount  Int       @default(0)
+  lastReadAt DateTime?
+  noteId     String
+  note       Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+}
+
+model Link {
+  id         String    @id @default(cuid())
+  title      String
+  url        String
+  provider   String    @default("other") // drive | onedrive | dropbox | other
+  readCount  Int       @default(0)
+  lastReadAt DateTime?
+  noteId     String
+  note       Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+}
+
+// Non-destructive reading annotations (highlights / bold / italic / font color)
+// One row per reading target; payload is a JSON array of annotation objects.
+// The original note/document HTML is NEVER modified — annotations are re-applied
+// at view time by wrapping text in styled spans.
+model Annotation {
+  id        String   @id @default(cuid())
+  kind      String // "document" | "note-item"
+  targetId  String // Document.id or NoteItem.id
+  payload   String   @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, targetId])
+}
+
+model StudySession {
+  id        String   @id @default(cuid())
+  mode      String   @default("focus") // focus | break
+  duration  Int // seconds
+  nodeId    String?
+  nodePath  String?
+  createdAt DateTime @default(now())
+}
+
+// ---------- Study engine: SRS flashcards + MCQ bank + exam attempts ----------
+
+// Leitner spaced-repetition card. box 1..5 → intervals [1,2,4,8,16] days.
+model Flashcard {
+  id              String    @id @default(cuid())
+  nodeId          String? // optional link to the dashboard tree node (legacy)
+  nodePath        String? // cached breadcrumb "Subject / Part / …" for display
+  studyNodeId     String? // independent study-level tree (ফ্ল্যাশকার্ড ব্যাংক) — separate from dashboard tree
+  studyNodePath   String? // cached breadcrumb "Subject / Level / …" from the study tree
+  front           String
+  back            String
+  explanation     String    @default("") // legacy plain-text explanation
+  explanationHtml String    @default("") // rich-text (Tiptap) explanation — takes precedence
+  favorite        Boolean   @default(false) // 💜 user-marked favorite (revision shortlist)
+  readLater       Boolean   @default(false) // 🔖 "পরবর্তীতে পড়ুন" — hard ones saved for later
+  box             Int       @default(1) // Leitner box 1..5
+  dueDate         DateTime  @default(now())
+  cardType        String    @default("basic") // basic | cloze | occlusion
+  clozeText       String    @default("") // {{c1::answer}} source; empty = use front
+  occlusionJson   String    @default("") // {imageUrl, rects:[{x,y,w,h}]}
+  lastResult      String? // "correct" | "wrong"
+  lastReviewedAt  DateTime?
+  reviewCount     Int       @default(0)
+  wrongCount      Int       @default(0)
+  suspended       Boolean   @default(false)
+  source          String    @default("manual") // manual | ai
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([dueDate])
+  @@index([studyNodeId])
+}
+
+// MCQ question bank (BCS preliminary style). options stored as JSON string array.
+model Mcq {
+  id            String    @id @default(cuid())
+  nodeId        String? // optional link to the dashboard tree node (legacy)
+  nodePath      String? // cached breadcrumb "Subject / Part / …" for display
+  studyNodeId   String? // independent study-level tree (MCQ ব্যাংক) — separate from dashboard tree
+  studyNodePath String? // cached breadcrumb "Subject / Level / …" from the study tree
+  question      String
+  options       String // JSON string: ["opt1","opt2","opt3","opt4"]
+  correctIndex   Int
+  explanation    String    @default("") // legacy plain-text explanation
+  explanationHtml String   @default("") // rich-text (Tiptap) explanation — takes precedence
+  favorite       Boolean   @default(false) // 💜 user-marked favorite (revision shortlist)
+  readLater      Boolean   @default(false) // 🔖 "পরবর্তীতে পড়ুন" — hard ones saved for later
+  attempts       Int       @default(0)
+  correctCount  Int       @default(0)
+  wrongCount    Int       @default(0)
+  lastResult    String? // "correct" | "wrong" | "skipped"
+  lastAttemptAt DateTime?
+  inWrongBook   Boolean   @default(false)
+  suspended     Boolean   @default(false)
+  source        String    @default("manual") // manual | ai
+  tags          String    @default("[]") // Tag System (#14): JSON string array — ["Important","Economy",…]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  review McqReview?
+
+  @@index([studyNodeId])
+}
+
+// ---------- Smart Revision (#19): per-MCQ spaced repetition ----------
+// One row per tracked MCQ. Untracked MCQs (no row) are due immediately.
+// Feedback: 😰 again → level 0, next in 10 min | 😕 hard → +1 day
+//           🙂 good → level+1, INTERVALS[level] days | 😎 easy → level+2, 1.5× days
+model McqReview {
+  mcqId          String    @id
+  mcq            Mcq       @relation(fields: [mcqId], references: [id], onDelete: Cascade)
+  lastReviewedAt DateTime?
+  nextReviewAt   DateTime  @default(now())
+  reviewCount    Int       @default(0)
+  confidence     Int       @default(0) // 0..100 running average of feedback scores
+  level          Int       @default(0) // 0..6 spaced-repetition level
+  lapses         Int       @default(0) // "again" count
+
+  @@index([nextReviewAt])
+}
+
+// ---------- Independent study-level tree (ফ্ল্যাশকার্ড ও MCQ-র নিজস্ব লেভেল) ----------
+// COMPLETELY SEPARATE from the dashboard TreeNode system. Used only by the
+// flashcard bank & MCQ bank (badge browser + pickers). Same 6-level free
+// hierarchy shape (Subject → Level → …), but its own nodes, its own CRUD.
+model StudyNode {
+  id        String      @id @default(cuid())
+  name      String
+  order     Int         @default(0)
+  parentId  String?
+  parent    StudyNode?  @relation("StudyNodeParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children  StudyNode[] @relation("StudyNodeParent")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([parentId])
+}
+
+// One finished quiz/mock session
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  mode      String // "practice" | "wrongbook" | "mock"
+  total     Int
+  correct   Int
+  wrong     Int
+  skipped   Int
+  score     Float // correct - 0.25 * wrong (BCS negative marking)
+  seconds   Int
+  config    String   @default("{}") // Mock Test Engine (#18): JSON {subject?,topic?,difficulty?,previousOnly?,random?}
+  createdAt DateTime @default(now())
+}
+
+// Single-row app settings (BYOK AI credentials — stays on this device only)
+model AppSetting {
+  id                 String   @id @default("app")
+  apiKey             String   @default("")
+  apiBase            String   @default("https://api.z.ai/api/paas/v4")
+  model              String   @default("glm-4.7-flash")
+  trashAutoPurgeDays Int      @default(0) // Safe Delete (#21): 0 = keep forever
+  notifSettings      String   @default("{}") // Notifications (#29): JSON config
+  studyPrefs         String   @default("{}") // {srs:"leitner"|"fsrs", interleave, tts}
+  updatedAt          DateTime @updatedAt
+}
+
+// ---------- Question bank: rich-text written questions per tree node ----------
+
+model Question {
+  id           String                @id @default(cuid())
+  nodeId       String? // optional tree node it belongs to
+  nodePath     String? // cached breadcrumb "Subject / Part / …"
+  title        String   @default("")
+  contentHtml  String   @default("") // rich text (Tiptap) — the question body
+  contentPlain String   @default("") // plain text extract for search
+  favorite     Boolean  @default(false) // 💜 quick flag on the question itself
+  noteHtml     String   @default("") // rich text (Tiptap) — personal notes on this question
+  notePlain    String   @default("") // plain text extract of the note (search)
+  attachments  QuestionAttachment[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([nodeId])
+}
+
+// Answer sources attached to one question: uploaded files / images / cloud links
+model QuestionAttachment {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  kind       String   // "file" | "image" | "link" | "note" | "data"
+  name       String
+  ext        String   @default("")  // normalized ext for files/images ("" for links)
+  mime       String   @default("")
+  size       Int      @default(0)   // bytes (0 for links)
+  path       String   @default("")  // bare filename inside db/uploads (files/images only)
+  url        String   @default("")  // for kind="link"
+  provider   String   @default("")  // links: "drive" | "onedrive" | "dropbox" | "other"
+  contentHtml String  @default("")  // kind="note" | "data": rich text (Tiptap) body
+  font       String   @default("kalpurush") // kind="note" | "data": "kalpurush" | "times"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([questionId])
+}
+
+// ---------- Universal 💜 favorites (every content type in the app) ----------
+
+// kind: "noteItem" | "document" | "link" | "question" | "node"
+// targetId: NoteItem.id / Document.id / Link.id / Question.id / TreeNode.id
+model Favorite {
+  id        String   @id @default(cuid())
+  kind      String
+  targetId  String
+  title     String   @default("") // cached display title
+  path      String   @default("") // cached breadcrumb path
+  meta      String   @default("{}") // cached JSON: {nodeId?, ext?, url?}
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, targetId])
+  @@index([kind])
+}
+
+// ---------- Study-plan calendar ----------
+
+// One planned reading item on a day
+model PlanItem {
+  id        String   @id @default(cuid())
+  date      String // YYYY-MM-DD
+  kind      String // "node" | "noteItem" | "document" | "link" | "question" | "custom"
+  targetId  String? // id of the target (null for custom text items)
+  title     String
+  path      String   @default("") // cached breadcrumb
+  meta      String   @default("{}") // cached JSON: {nodeId?, ext?, url?}
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Success / fail mark for a day
+model DayStatus {
+  date      String   @id
+  status    String // "success" | "fail"
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- Cross Linking (#33): ANY-to-ANY content interconnection ----------
+// Connects one content item to another (question ↔ topic ↔ note ↔ file ↔ link).
+// Storage direction is CANONICAL (lower kind-rank first, then id compare) so
+// a→b and b→a are always the SAME row. Kinds are resolved against the live
+// index at read time; dangling links (deleted target) are simply skipped.
+// kind: "node" | "noteItem" | "document" | "link" | "question"
+model CrossLink {
+  id         String   @id @default(cuid())
+  sourceKind String
+  sourceId   String
+  targetKind String
+  targetId   String
+  createdAt  DateTime @default(now())
+
+  @@unique([sourceKind, sourceId, targetKind, targetId])
+  @@index([sourceKind, sourceId])
+  @@index([targetKind, targetId])
+}
+
+// পরীক্ষার কাউন্টডাউন — সর্বোচ্চ ৩টি (server-enforced cap)
+// date is "YYYY-MM-DD"; countdown shows months + days remaining.
+model ExamCountdown {
+  id        String   @id @default(cuid())
+  title     String
+  date      String // YYYY-MM-DD
+  note      String   @default("") // optional short sub-line
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
+// ---------- Safe Delete (#21): ট্র্যাশ — Delete → Trash → Restore → Permanent ----------
+// Every destructive DELETE first serializes the row(s) into a JSON payload here,
+// then removes them from the live tables. Restore re-inserts with the SAME ids,
+// so Favorites / CrossLinks / PlanItems that referenced the item revive instantly.
+// Uploaded files are NEVER removed at trash time — only on Permanent Delete.
+// kind: "node" | "noteItem" | "document" | "link" | "question" |
+//       "questionAttachment" | "flashcard" | "mcq"
+model TrashItem {
+  id        String   @id @default(cuid())
+  kind      String
+  refId     String // original row id (dedupe + same-id restore)
+  title     String // display title
+  path      String   @default("") // cached breadcrumb at delete time
+  summary   String   @default("") // "২টি সেকশন · ৩টি নোট …" / content excerpt
+  payload   String // JSON snapshot (bcs-trash.ts TrashPayload)
+  sizeBytes Int      @default(0)
+  deletedAt DateTime @default(now())
+
+  @@unique([kind, refId])
+  @@index([deletedAt])
+}
+
+// Which notification fingerprints the user has already seen (unread badge).
+model NotificationRead {
+  fingerprint String   @id
+  readAt      DateTime @default(now())
+}
+
+// ---------- Additive BCS modules (local-only; existing tables unchanged) ----------
+
+model FsrsState {
+  id            String    @id @default(cuid())
+  flashcardId   String    @unique
+  stability     Float     @default(0)
+  difficulty    Float     @default(0)
+  elapsedDays   Float     @default(0)
+  scheduledDays Float     @default(0)
+  reps          Int       @default(0)
+  lapses        Int       @default(0)
+  state         String    @default("new") // new | learning | review | relearning
+  lastReview    DateTime?
+  due           DateTime  @default(now())
+}
+
+model WrittenAttempt {
+  id          String   @id @default(cuid())
+  questionId  String?
+  title       String   @default("")
+  kind        String   @default("essay") // essay | precis | translation | report | custom
+  promptHtml  String   @default("")
+  answerHtml  String   @default("")
+  marks       Int      @default(10)
+  minutes     Int      @default(20)
+  secondsUsed Int      @default(0)
+  aiFeedback  String   @default("")
+  status      String   @default("draft") // draft | submitted | evaluated
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SyllabusItem {
+  id        String   @id @default(cuid())
+  paper     String // prelim | written
+  subject   String
+  topic     String
+  marks     Int      @default(0)
+  order     Int      @default(0)
+  nodeId    String?
+  status    String   @default("unread") // unread | reading | noted | mcq | weak | mastered
+  strength  String   @default("") // preparation strength (5-level dropdown): very_weak | weak | medium | strong | very_strong | "" (not set)
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([paper, order])
+}
+
+model CurrentAffair {
+  id          String   @id @default(cuid())
+  date        String // YYYY-MM-DD
+  title       String
+  summary     String   @default("")
+  category    String   @default("bangladesh")
+  factLines   String   @default("[]") // JSON string array
+  mcqQuestion String   @default("")
+  mcqOptions  String   @default("[]") // JSON string array
+  mcqCorrect  Int      @default(0)
+  source      String   @default("manual") // manual | ai
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+model NoteVersion {
+  id         String   @id @default(cuid())
+  noteItemId String
+  title      String   @default("")
+  content    String   @default("")
+  createdAt  DateTime @default(now())
+
+  @@index([noteItemId, createdAt])
+}

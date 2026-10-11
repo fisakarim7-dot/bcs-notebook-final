@@ -1,0 +1,631 @@
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v23)  ← সর্বশেষ
+==========================================
+ZIP name : BCS-Notebook-v23.zip
+New      : রিচ টেক্সট এডিটরে MS Word-এর মতো Shadow ও Border ফিচার যোগ।
+           • টুলবারে নতুন ২টি বাটন (রং-এর পাশে):
+             1) "A" (ছায়াযুক্ত) — লেখায় ছায়া: হালকা / মাঝারি / গাঢ় /
+                নীল আভা / লাল আভা + ছায়া মুছুন। লেখা সিলেক্ট করে বেছে নিন —
+                Word-এর Text Effects → Shadow-এর মতো।
+             2) বর্ডার বাটন — ধরন (সরল/ড্যাশ/ডট/ডাবল), মোটা (1–4px),
+                রং + লাইভ প্রিভিউ। "সিলেক্ট করা লেখায় দিন" (লেখার চারপাশে
+                বর্ডার) অথবা "পুরো প্যারায় দিন" (প্যারা/হেডিং-এর চারপাশে
+                বর্ডার) — Word-এর Borders-এর মতো। এক ক্লিকে বর্ডার মোছা যায়।
+           • সব এডিটরে একই ফিচার (নোট এডিটর, ব্যাখ্যা এডিটর, প্রশ্ন ব্যাংক) —
+             শেয়ার্ড rich-toolbar থেকেই আসে।
+           • ছায়া/বর্ডার HTML-এ ইনলাইন স্টাইল হিসেবে সেভ হয় — রিলোড,
+             প্রিন্ট/PDF-এ অক্ষত থাকে।
+           (নতুন ফাইল: src/components/bcs/editor/text-effects.tsx;
+            পরিবর্তন: src/components/bcs/editor/rich-toolbar.tsx)
+Checks   : TSX syntax OK (২টি ফাইল) · TipTap marks/commands typecheck OK ·
+           UI typecheck OK (stub সহ)। পূর্ণ next build স্যান্ডবক্সে সম্ভব হয়নি —
+           আসল বিল্ড Vercel-এ; আসল ফোনে নিশ্চিত করুন।
+
+ব্যবহার: পুরোনো ফোল্ডার মুছে extract → PUSH-UPDATE.bat → Vercel Ready →
+ফোনে সাইট ডেটা ক্লিয়ার / hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v22)  ← সর্বশেষ
+==========================================
+ZIP name : BCS-Notebook-v22.zip
+New      : ফাইল ভিউয়ারের (হাইলাইট ভিউ) উপরের বার এখন লুকানো/দেখানো যায়।
+             • বারের একদম বামে ▲ বাটন — চাপলে পুরো বার লুকিয়ে যায়, পড়ার জায়গা
+               পুরো স্ক্রিন জুড়ে
+             • বার লুকানো অবস্থায় ওপরে-ডানে ছোট গোল ☰ বাটন — চাপলে বার ফিরে আসে
+             • পছন্দ মনে থাকে (localStorage) — পরের ফাইল/পরের বার খুললেও একই
+               অবস্থায় খোলে; ব্রাউজার স্টোরেজ বন্ধ থাকলেও বাটন কাজ করে
+             • PDF, DOCX, HTML, TXT, ছবি — সব ধরনের ফাইলের ভিউয়ারে কাজ করে
+           (view/route.ts)
+Checks   : পেজ HTML তৈরি ও ইনলাইন স্ক্রিপ্ট syntax OK · লুকানো/মনে রাখা/ফেরানো
+           লজিক সিমুলেশন OK। পূর্ণ next build স্যান্ডবক্সে সম্ভব হয়নি —
+           আসল বিল্ড Vercel-এ; আসল ফোনে নিশ্চিত করুন।
+
+ব্যবহার: পুরোনো ফোল্ডার মুছে extract → PUSH-UPDATE.bat → Vercel Ready →
+ফোনে সাইট ডেটা ক্লিয়ার / hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v21)
+==========================================
+ZIP name : BCS-Notebook-v21.zip
+Fix      : মোবাইলে PDF হাইলাইট ভিউতে ~৬৫%-এর বেশি জুম করলে পেজের বাম পাশের
+           লেখা স্ক্রিনের বাইরে আটকে যেত (ডানে স্ক্রল করা গেলেও বামে যেত না)।
+           কারণ: পেজের কন্টেইনার (#pdfpages) ছিল flex + align-items:center।
+           পেজ স্ক্রিনের চেয়ে চওড়া হলে সেটি দুই পাশেই সমান ছাপিয়ে যায়, আর
+           বাম দিকের ছাপানো অংশে স্ক্রল করা যায় না (পরিচিত flexbox সীমাবদ্ধতা)।
+           ঠিক (view/route.ts + reader/route.ts): align-items:flex-start +
+           পেজে margin-left/right:auto — জায়গা থাকলে পেজ মাঝখানে, না থাকলে
+           বাম প্রান্ত থেকে শুরু হয়ে ডানে স্ক্রল হয়। কোনো লেখা আর কাটে না।
+           (v20-এর নতুন ক্লিন রিডারেও একই ঠিক করা হয়েছে।)
+Checks   : CSS ব্লক parse OK। পূর্ণ next build স্যান্ডবক্সে সম্ভব হয়নি —
+           আসল বিল্ড Vercel-এ; আসল ফোনে জুম করে নিশ্চিত করুন।
+
+ব্যবহার: পুরোনো ফোল্ডার মুছে extract → PUSH-UPDATE.bat → Vercel Ready →
+ফোনে সাইট ডেটা ক্লিয়ার / hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v20)
+==========================================
+ZIP name : BCS-Notebook-v20.zip
+Fix      : ⧉ "নতুন ট্যাবে PDF রিডারে খুলুন" আর হাইলাইট ভিউতে ফেরত যায় না।
+           (v19-এ ব্রাউজারে নিজস্ব PDF রিডার না থাকলে বাটনটি অ্যাপের হাইলাইট
+           পেজ ?plain=1 খুলত — সেটা ভুল ছিল।)
+           নতুন: /api/documents/[id]/reader — হাইলাইট/অ্যাপ-টুলবার ছাড়া ক্লিন
+           ফুল-স্ক্রিন PDF রিডার (নাম, পৃষ্ঠা x/y, জুম −/+, ডাউনলোড)।
+             • নিজস্ব PDF রিডার আছে (navigator.pdfViewerEnabled): লোড হওয়া PDF-এর
+               বাইট থেকে application/pdf Blob বানিয়ে ব্রাউজারের নিজস্ব রিডারে
+             • নেই (Android Chrome / "PDF ডাউনলোড করুন" সেটিং): /reader পেজে
+             • Blob ব্যর্থ হলেও /reader-এ — কখনো ডাউনলোড বা ফাঁকা পেজ নয়
+           (v19-এর সংশোধনও আছে: file route-এ ঠিক Content-Type, ASCII filename,
+           nosniff; Google gview বাদ।)
+Checks   : pdf-reader.js ও reader-এর ইনলাইন স্ক্রিপ্ট syntax OK · ৬টি ব্রাউজার
+           পরিস্থিতির সিমুলেশন OK। পূর্ণ next build স্যান্ডবক্সে সম্ভব হয়নি —
+           আসল বিল্ড Vercel-এ।
+
+ব্যবহার: পুরোনো ফোল্ডার মুছে extract → PUSH-UPDATE.bat → Vercel Ready →
+hard-refresh (Ctrl+Shift+R / ফোনে সাইট ডেটা ক্লিয়ার)।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v19)
+==========================================
+ZIP name : BCS-Notebook-v19.zip
+Fix      : ফাইল সেকশন → নতুন উইন্ডোতে খুলুন → ⧉ "নতুন ট্যাবে PDF রিডারে খুলুন":
+             • ল্যাপটপে সরাসরি ডাউনলোড হয়ে যাওয়া বন্ধ
+             • মোবাইলে ফাঁকা পেজ (Google gview) বন্ধ
+           কারণ: বাটনটি কাঁচা ফাইল-লিংক (/api/documents/ID/file) খুলত। ব্রাউজার
+           সেটা ডাউনলোড করে ফেলত (সার্ভারের Content-Type/হেডার বা ব্রাউজার সেটিং
+           অনুযায়ী)। মোবাইলে Google gview আপনার সাইটের ফাইল আনতে পারত না → ফাঁকা।
+           ঠিক:
+             1) public/pdf-reader.js — ⧉ এখন ব্রাউজারের ক্ষমতা দেখে
+                (navigator.pdfViewerEnabled):
+                • নিজস্ব PDF রিডার আছে (ডেস্কটপ, iPhone Safari): লোড হওয়া PDF-এর
+                  বাইট থেকে application/pdf Blob বানিয়ে নতুন ট্যাবে খোলে —
+                  ব্রাউজারের নিজস্ব রিডারেই খোলে, ডাউনলোড হয় না
+                • নিজস্ব রিডার নেই (Android Chrome, বা ব্রাউজারে "PDF ডাউনলোড
+                  করুন" সেটিং): অ্যাপের pdf.js রিডার নতুন ট্যাবে (?plain=1)
+                • Google gview সম্পূর্ণ বাদ
+             2) api/documents/[id]/file/route.ts — Content-Type এখন সবসময়
+                এক্সটেনশন থেকে (pdf → application/pdf), ডাটাবেসের ভুল MIME
+                আর কাজ করে না; ASCII filename fallback ও nosniff যোগ।
+           (দ্রষ্টব্য: Android Chrome-এ ব্রাউজারের নিজস্ব PDF রিডারই নেই, তাই
+           সেখানে অ্যাপের রিডারই সবচেয়ে কাছের বিকল্প।)
+
+ব্যবহার: পুরোনো ফোল্ডার মুছে extract → PUSH-UPDATE.bat → Vercel Ready →
+hard-refresh (Ctrl+Shift+R / ফোনে সাইট ডেটা ক্লিয়ার)।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v18)
+==========================================
+ZIP name : BCS-Notebook-v18.zip
+Fix      : ⧉ এখন সত্যিই নতুন ট্যাবে PDF রিডারে খোলে — হাইলাইট ভিউ নয়,
+           ডাউনলোড নয়:
+             • ডেস্কটপ: ব্রাউজারের নিজস্ব PDF ভিউয়ার (কাঁচা লিংক)
+             • মোবাইল : Google-এর অনলাইন ভিউয়ার (docs.google.com/gview) —
+               নতুন ট্যাবে পড়া যায়, ডাউনলোড হয় না
+           (মোবাইল ব্রাউজারে নিজস্ব ভিউয়ার নেই বলে কাঁচা লিংক ডাউনলোড হত;
+           আর আগের ?plain সমাধান অ্যাপের পেজে ফেরত পাঠাত — দুটোই এবার বদলানো।)
+           📄 = এই পেজেই সাধারণ ভিউ · 🖍️ = হাইলাইট ভিউ · ⧉ = নতুন ট্যাবে রিডার
+
+Checks   : pdf-reader parse OK · tsc (view) 0 নতুন error। পূর্ণ next build
+           স্যান্ডবক্স-মেমোরিতে killed; আসল বিল্ড Vercel-এ।
+
+ব্যবহার: extract → PUSH-UPDATE.bat → bcs-notebook-final Ready → hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v17)  ← সর্বশেষ
+==========================================
+ZIP name : BCS-Notebook-v17.zip
+Fix      : ⧉ "নতুন ট্যাবে" বাটন এখন কাঁচা PDF লিংক না খুলে অ্যাপের নিজস্ব
+           ফুল-স্ক্রিন রিডার নতুন ট্যাবে খোলে (?plain=1) — মোবাইলে আর
+           অটো-ডাউনলোড হয় না, সব প্ল্যাটফর্মে খোলে। (মোবাইল ব্রাউজারে নিজস্ব
+           PDF ভিউয়ার নেই বলে কাঁচা লিংক = ডাউনলোড; এটাই সমস্যার কারণ ছিল।)
+           📄 = এই পেজেই সাধারণ ভিউ · 🖍️ = হাইলাইট ভিউ · ⧉ = নতুন ট্যাবে রিডার।
+Checks   : tsc (view/pdf/trash) 0 নতুন error · pdf-reader parse OK।
+           (স্যান্ডবক্সে পূর্ণ next build মেমোরি-সীমায় killed হয়; আসল বিল্ড
+           Vercel-এ হবে, যেখানে পর্যাপ্ত মেমোরি আছে।)
+
+ব্যবহার: extract → PUSH-UPDATE.bat → bcs-notebook-final এ Ready → hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v17)  ← সর্বশেষ
+==========================================
+ZIP name : BCS-Notebook-v17.zip
+Fix      : ⧉ "নতুন ট্যাবে" বাটন এখন কাঁচা PDF লিংক না খুলে, অ্যাপের নিজস্ব
+           ফুল-স্ক্রিন রিডার নতুন ট্যাবে খোলে (?plain=1) — ফলে মোবাইলে আর
+           অটো-ডাউনলোড হয় না, সব প্ল্যাটফর্মে খোলে। (মোবাইল ব্রাউজারে নিজস্ব
+           PDF ভিউয়ার নেই বলে কাঁচা লিংক = ডাউনলোড; এটাই সেই সমস্যার কারণ ছিল।)
+           📄 = এই পেজেই সাধারণ ভিউ · 🖍️ = হাইলাইট ভিউ · ⧉ = নতুন ট্যাবে রিডার।
+
+ব্যবহার: extract → PUSH-UPDATE.bat → bcs-notebook-final এ Ready → hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v16)  ← সর্বশেষ
+==========================================
+ZIP name : BCS-Notebook-v16.zip
+Change   : PUSH-UPDATE.bat এখন সরাসরি GitHub repo
+           fisakarim7-dot/bcs-notebook-FINAL এ push করে — ফলে ডিপ্লয় যাবে
+           Vercel প্রজেক্ট bcs-notebook-final এ। (আগে bcs-notebook এ যেত।)
+           DEPLOY ডকুমেন্টের উদাহরণও আপডেট।
+
+ব্যবহার: extract → ফোল্ডারের ভেতরে PUSH-UPDATE.bat ডাবল-ক্লিক → GitHub লগইন →
+bcs-notebook-final এ Deployment Ready → ফোনে hard-refresh।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v15)  ← সর্বশেষ
+==========================================
+ZIP name : BCS-Notebook-v15.zip
+Fix      : PUSH-UPDATE.bat এখন pure-ASCII + Windows (CRLF) line-ending —
+           আগে Unix(LF)+বাংলা অক্ষরের কারণে Windows "This app can't run on
+           your PC" দেখাত। এখন ডাবল-ক্লিকে ঠিকমতো চলবে।
+
+ব্যবহার: extract → ফোল্ডারের ভেতরে PUSH-UPDATE.bat ডাবল-ক্লিক → GitHub লগইন
+দিন → Vercel Ready → ফোনে hard-refresh।
+
+যদি bat এখনো সমস্যা দেয়, cmd-এ নিচের কমান্ডগুলো পরপর চালান (নতুন ফোল্ডারে):
+  git init
+  git remote add origin https://github.com/fisakarim7-dot/bcs-notebook.git
+  git add -A
+  git commit -m "v15 update"
+  git branch -M main
+  git push -f origin main
+
+v14 পর্যন্ত সব ফিক্স অপরিবর্তিত আছে।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v14)  ← সর্বশেষ
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v14.zip
+Checks     : next build ✓ (v13 কোড) · PUSH-UPDATE.bat যুক্ত
+
+v14 — "git repository পাচ্ছে না" সমস্যার সমাধান
+নতুন ফোল্ডারে .git নেই বলে git add/commit চলছিল না। এখন প্যাকের ভেতরে
+PUSH-UPDATE.bat আছে — extract-করা ফোল্ডারের ভেতরে এটি ডাবল-ক্লিক করলেই সে
+নিজে git init + remote + add + commit + push করে দেবে (main ও master দুটোতেই
+চেষ্ঠা, যাতে Vercel যে ব্রাঞ্জই দেখুক ডিপ্লয় পায়)। package.json না থাকলে
+স্ক্রিপ্ট নিরাপদে থেমে যাবে (ভুল ফোল্ডারে চালালে ক্ষতি নেই)।
+
+v13/v12/v11-এর সব ফিক্স আছে: ট্র্যাশ no-hscroll + লেবেলযুক্ত ফেরান/মুছুন,
+ইন-অ্যাপ সাধারণ PDF ভিউ + নতুন ট্যাব (⧉), মোবাইল fit-width + responsive টপবার,
+Blob access-public + sin1 রিজিয়ন + pooled DB, Prisma P2028 ফিক্স, JSON ইমপোর্ট।
+
+ব্যবহার:
+ 1. ZIP নতুন ফোল্ডারে extract করুন।
+ 2. ফোল্ডারের ভেতরে PUSH-UPDATE.bat ডাবল-ক্লিক করুন (প্রথমবার GitHub লগইন চাইতে পারে)।
+ 3. Vercel Dashboard-এ Deployment Ready হওয়া পর্যন্ত অপেক্ষা করুন।
+ 4. ফোনে hard-refresh করুন।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v13)  ← সর্বশেষ (এটিই ব্যবহার করুন)
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v13.zip
+Checks     : tsc 0 errors (trash/view) · next build ✓
+
+v13 — ট্র্যাশ হরাইজন্টাল স্ক্রল/বাটন-কাটা + "নতুন উইন্ডো" ফিরিয়ে আনা
+
+সমস্যা ১ (স্ক্রিনশট): লম্বা নামে ট্র্যাশ ডায়ালগ হরাইজন্টাল স্ক্রল হচ্ছিল, ডিলিট
+বাটন ডান পাশে কেটে যাচ্ছিল।
+কারণ: টাইটেল single-line nowrap থাকায় li-এর প্রস্থ বেড়ে ScrollArea হরাইজন্টাল
+স্ক্রল করছিল; justify-end বাটনগুলো দূরে ডান পাশে চলে যেত।
+ঠিক (trash-dialog.tsx): টাইটেল এখন ২ লাইনে wrap হয়ে তারপর … দেখায়
+(line-clamp + break-words) — আর কোনো নাম li চওড়া করতে পারে না। বাটন-সারি
+flex-wrap + li/top-row-এ min-w-0/max-w-full — সবসময় ডায়ালগের ভেতরে থাকবে।
+
+সমস্যা ২: "সাধারণ ভিউ নতুন উইন্ডোতে খুলছে না"।
+ঠিক: এখন ৩টি স্পষ্ট বাটন (view/route.ts + pdf-reader.js):
+  📄 = সাধারণ ভিউ — এই পেজেই খোলে (হাইলাইট ছাড়া), ডাউনলোড হয় না (মোবাইল-নিরাপদ)
+  🖍️ = হাইলাইট ভিউ — ইন-অ্যাপ
+  ⧉  = নতুন ট্যাবে — ব্রাউজারের নিজস্ব PDF রিডারে (আসল "নতুন উইন্ডো", ডেস্কটপে
+       নেটিভ ভিউ; মোবাইলে ব্রাউজার ভেদে ডাউনলোডও হতে পারে — সেক্ষেত্রে 📄 ব্যবহার করুন)
+
+পরীক্ষা: tsc 0 error · next build ✓ · pdf-reader parse OK। মোবাইল ভিজ্যুয়াল আসল
+ফোনে নিশ্চিত করুন।
+
+ইনস্টল: পুরোনো ফোল্ডার মুছে নতুন করে extract → git push → Ready → ফোনে
+hard-refresh (ক্যাশ ক্লিয়ার)।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v12)  ← সর্বশেষ (v10/v11-এর বদলে এটি ব্যবহার করুন)
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v12.zip
+Checks     : tsc trash 0 errors · next build ✓
+
+v12 — লম্বা ফাইলের নামে ট্র্যাশের রিস্টোর/ডিলিট হারিয়ে যেত, সেটি ঠিক
+স্ক্রিনশটের সমস্যা: ফাইলের নাম অনেক লম্বা হলে টাইটেল লেআউট ভেঙে ডান দিকের
+বাটনগুলো স্ক্রিনের বাইরে ঠেলে দিত (ডায়ালগ overflow-hidden বলে দেখা যেত না)।
+ঠিক করা (trash-dialog.tsx):
+  1. টাইটেল এখন বাধ্যতামূলকভাবে ছাঁটা হয় (min-w-0 + flex-1 + truncate) — নাম
+     যত বড়ই হোক, লেআউট ভাঙে না, ellipsis (…) দেখায়।
+  2. রিস্টোর/ডিলিট বাটন এখন প্রতিটি আইটেমের NIচের আলাদা সারিতে — সবুজ
+     "ফেরান" ও লাল "চিরতরে মুছুন" — টাইটেলের দৈর্ঘ্য যা-ই হোক, সবসময় দৃশ্যমান।
+(v11-এর ফিক্সও আছে: ইন-অ্যাপ সাধারণ PDF ভিউ — ডাউনলোড হয় না।)
+
+পরীক্ষা: tsc trash 0 error · next build ✓। লম্বা-নাম আইটেমসহ মোবাইল ভিউ আসল
+ফোনে নিশ্চিত করুন।
+
+জরুরি ইনস্টল-নির্দেশ: পুরোনো ফোল্ডার MUছে দিয়ে এই ZIP নতুন ফোল্ডারে extract
+করুন (partial replace-এ পুরোনো ফাইল থেকে গেলে সমস্যা থেকে যায়), তারপর
+git push → Ready → ফোনে hard-refresh (Chrome: সাইট ডেটা ক্লিয়ার) করুন।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v11)  ← সর্বশেষ
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v11.zip
+Checks     : tsc 0 errors (trash/pdf) · next build ✓ · trash API end-to-end tested
+
+v11 — দুটি সমস্যা ঠিক
+
+সমস্যা ১: "সাধারণ ভিউ"-তে খুললে ফাইল ডাউনলোড হয়ে যেত (মোবাইলে)।
+কারণ: সাধারণ ভিউ ফাইল-এন্ডপয়েন্ট নতুন ট্যাবে খুলত; Android Chrome-এ ইনলাইন
+PDF ভিউ নেই বলে ব্রাউজার ফাইল ডাউনলোড করত।
+ঠিক (public/pdf-reader.js): সাধারণ ভিউ এখন ইন-অ্যাপ — একই পেজে pdf.js রেন্ডার,
+শুধু হাইলাইট ওভারলে/টুলবার বন্ধ (setPlain)। 📄 = সাধারণ ভিউ, 🖍️ = হাইলাইট ভিউ —
+দুই দিকেই টগল হয়, কোনো ডাউনলোড নয়, সব প্ল্যাটফর্মে খোলে।
+
+সমস্যা ২: ট্র্যাশে রিস্টোর/ডিলিট "পাওয়া যাচ্ছিল না"।
+কারণ: ব্যাকএন্ড ঠিক ছিল (লোকাল টেস্টে delete→trash→restore→permanent সব 200),
+কিন্তু UI-তে বাঁ দিকে দুটো আইকন-বাটন ছিল যাদের লেবেল শুধু tooltip-এ — টাচে
+tooltip দেখা যায় না, তাই মোবাইলে বোতামগুলো চেনা/খুঁজে পাওয়া কঠিন ছিল।
+ঠিক (trash-dialog.tsx): প্রতিটি আইটেমের নিচে এখন স্পষ্ট লেবেলযুক্ত বাটন —
+সবুজ "ফেরান" ও লাল "চিরতরে মুছুন" — সবসময় দৃশ্যমান (tooltip-নির্ভর নয়)।
+আইকন-টাইপ এররও ($$typeof) সরানো হয়েছে; অপ্রয়োজিত Tooltip ইমপোর্ট বাদ।
+
+ট্র্যাশ মনে রাখবেন: ট্র্যাশ প্রতি-ডেটাবেসে আলাদা — ল্যাপটপে মোছা আইটেম ল্যাপটপের
+ট্র্যাশে, ক্লাউডে মোছা আইটেম ক্লাউডের ট্র্যাশে। JSON ইমপোর্টে ট্র্যাশও একবার কপি হয়।
+
+পরীক্ষা: লোকাল sqlite-এ delete→trash(count1)→restore(200,count0)→re-delete→
+permanent(200,count0) · tsc trash/pdf 0 error · next build ✓। মোবাইল ভিজ্যুয়াল
+আসল ফোনে নিশ্চিত করুন (এখানে ব্রাউজার নেই)।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v10)  ← সর্বশেষ
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v10.zip
+Checks     : tsc 0 errors · next build ✓ · pdf-reader.js parse OK · served-route tests
+
+v10 — PDF ভিউ + মোবাইল লেআউট ঠিক
+
+সমস্যা ১: মোবাইলে PDF অনেক বড় হয়ে স্ক্রিনের বাইরে কেটে যেত।
+কারণ: pdf-reader.js সবসময় ১০% (৮১৬px) চওড়া রেন্ডার করত — ফোনের ৩৯০px
+স্ক্রিনে তা হরাইজন্টালভাবে overflow করত।
+ঠিক (public/pdf-reader.js): নতুন fitToWidth() — সরু স্ক্রিনে পেজের চওড়া
+কন্টেইনারের সমান করে স্কেল নামিয়ে আনে (১০০%-এর বেশি কখনো বাড়ায় না);
+জুম বাটন (+/−) আগের মতো কাজ করে, resize-এ আবার fit হয়। ডেস্কটপে ১০০% অক্ষত।
+
+সমস্যা ২: মোবাইলে পুরো-উইন্ডোর অপশনগুলো দেখা যেত না / কেটে যেত।
+কারণ: টপবার position:fixed + উচ্চতা ৫৬px, আর ভেতরের বাটনগুলো এক লাইনে
+nowrap — সরু স্ক্রিনে ডান দিকের বাটন হারিয়ে যেত।
+ঠিক (view/route.ts READER_CSS): টপবার এখন sticky + flex-wrap — সরু স্ক্রিনে
+দুই লাইনে ভাগ হয় (লাইন ১: ব্যাক + সব বাটন, লাইন ২: শিরোনাম) — প্রতিটি
+অপশন (জুম, 📄 সাধারণ ভিউ, 🖍️, ডাউনলোড, +১ পড়া) দেখা ও ছোঁয়া যায়।
+
+সমস্যা ৩: "সাধারণ ভিউ"-তে খুললে কাঁচা {"error":"File missing in storage"} দেখাত।
+ঠিক (file/route.ts): ব্রাউজার থেকে খুললে (Accept: text/html) এখন একটি সহজ
+বাংলা পেজ দেখায় ("ফাইলটি পাওয়া যায়নি" + কারণ + ফেরার লিংক); API কলের জন্য
+আগের JSON-ই থাকে।
+
+মূল কারণ (কেন ফাইল "missing"): JSON ইমপোর্টে PDF/ছবি আসে না — তাই ল্যাপটপের
+পুরোনো ফাইলগুলোর কপি ক্লাউড Blob-এ নেই। হাইলাইট→সাধারণ ভিউ ফ্লো ফাইল থাকলে
+ঠিকই চলে। ফাইলগুলো ক্লাউডে আনতে: ল্যাপটপে "সম্পূর্ণ এক্সপোর্ট (ZIP)" করে ক্লাউডে
+সেই ZIP ইমপোর্ট করুন (এখন Blob ঠিক আছে, তাই ফাইলসহ উঠবে)। নতুন আপলোড স্বাভাবিক।
+
+পরীক্ষা (লোকাল): /pdf-reader.js-এ fitToWidth/autoFit আছে · view HTML-এ sticky +
+flex-wrap + মিডিয়া-কোয়েরি + 📄 বাটন · ফাইল সার্ভ 200 application/pdf · ফাইল
+সরিয়ে Accept:text/html দিলে 410 + "ফাইলটি পাওয়া যায়নি" পেজ · Accept:json দিলে
+JSON 410। মোবাইল ফিট-উইডথ আসল ফোনে চোখে দেখে নিশ্চিত হতে হবে (এখানে ব্রাউজার নেই)।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v9)  ← সর্বশেষ
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v9.zip
+Checks     : tsc 0 errors · next build OK · SDK validation test · db.ts 4/4 · smoke 4/4
+
+v9 — দুটি সমস্যা ঠিক: (১) ফাইল আপলোড ব্যর্থ, (২) অ্যাপ ধীর
+
+সমস্যা ১: "Vercel Blob: access must be \"public\""
+আসল কারণ (SDK-র কোডে গিয়ে দেখা): @vercel/blob 0.27.3-এ put() ফাংশনে
+`access: "public"` দেওয়া BAধ্যতামূলক — না দিলেই এই এরর। আগে private store-এর
+সময় আমি access সরিয়ে দিয়েছিলাম, সেটাই ভুল ছিল; আসলে store-টি Public করতে
+হতো (আপনি এখন করেছেন)।
+ঠিক করা হয়েছে (src/lib/storage.ts): তিনটি put() কলেই এখন
+`PUT_OPTS = { access: "public", addRandomSuffix: false }`।
+প্রমাণ (আসল SDK দিয়ে চালানো):
+  পুরোনো আকার → Vercel Blob: access must be "public"   ← আপনার এরর
+  নতুন আকার  → validation পেরিয়ে API পর্যন্ত গেছে (fake token তাই
+                "This store does not exist") → অর্থাৎ access-এরর শেষ।
+
+সমস্যা ২: অ্যাপ ধীর
+আসল কারণ: vercel.json ছিল না, তাই ফাংশন চলত Vercel-র ডিফল্ট রিজিয়ন
+`iad1` (ওয়াশিংটন ডিসি, USA)-তে — অথচ আপনার Neon ও Blob দুটোই Singapore-এ।
+প্রতিটি DB কুয়েরি দুই প্রান্তের মধ্যে যেত (~২৩০ms), এক পেজে দশ-বিশ কুয়েরি
+মানে কয়েক সেকেন্ড।
+ঠিক করা হয়েছে:
+  1. নতুন vercel.json → "regions": ["sin1"]  (Singapore) — ডেটাবেস/স্টোরেজের
+     পাশেই ফাংশন চলবে, প্রতিটি কুয়েরির লেটেন্সি ~২৩০ms → ~১-২ms।
+  2. src/lib/db.ts এখন Neon-র POOLED এন্ডপয়েন্ট (হোস্টে "-pooler") বেছে নেয় —
+     সার্ভারলেসে দ্রুত কানেকশন, কানেকশন-সীমা শেষ হয় না।
+     (যাচাই: pooled+direct থাকলে pooled নেয়; শুধু direct থাকলে direct;
+      লোকাল sqlite অপরিবর্তিত — ৪/৪ কেস ঠিক)
+
+জরুরি: Blob store অবশ্যই PUBLIC হতে হবে (Vercel → Storage → আপনার store →
+Settings), কারণ SDK-র put() অন্য কিছু মানে না।
+
+পরীক্ষা: tsc ০ error · next build ✓ · vercel.json ভ্যালিড · লোকাল স্মোক টেস্ট
+/ , /api/tree , /api/stats , /api/exim/export-data সব 200।
+
+v8 (অপরিবর্তিত): Prisma P2028 ফিক্স — TRUNCATE + createMany ব্যাচ + 55s টাইমআউট।
+v7 (অপরিবর্তিত): "শুধু ডেটা এক্সপোর্ট (JSON)" + ৩-মোড ইমপোর্ট রুট।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v8)  ← সর্বশেষ
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-v8.zip
+Checks     : tsc 0 errors (changed files) · next build OK · 1525-row import tested
+
+v8 — Vercel-এ ইমপোর্ট ব্যর্থ হওয়ার আসল কারণ ঠিক (Prisma P2028):
+সমস্যা: applyData() একটি interactive $transaction-এর ভেতরে চলত, কিন্তু
+Prisma-র ডিফল্ট ট্রানজেকশন টাইমআউট মাত্র ৫ সেকেন্ড। ভেতরে প্রতিটি টেবিলের
+জন্য deleteMany (২৭ বার) আর প্রতিটি সারির জন্য আলাদা create() কল হতো —
+Neon (রিমোট Postgres)-এ প্রতিটি কল নেটওয়ার্ক রাউন্ড-ট্রিপ, তাই ৫ সেকেন্ড
+পেরিয়ে ট্রানজেকশন বন্ধ হয়ে যেত এবং পরের কুয়েরি মরত:
+  "Transaction API error: Transaction not found" (code P2028)
+
+সমাধান (src/lib/bcs-exim.ts):
+1. $transaction-এ টাইমআউট দেওয়া হয়েছে → { maxWait: 10s, timeout: 55s }
+   (ফাংশনের maxDuration 60s-এর সঙ্গে মিলিয়ে)।
+2. Postgres-এ ২৭টি deleteMany-র বদলে একটিমাত্র
+   TRUNCATE TABLE … RESTART IDENTITY CASCADE → ১ রাউন্ড-ট্রিপ।
+3. প্রতি সারিতে create()-র বদলে ব্যাচে createMany() (২০০ সারি/স্টেটমেন্ট)।
+   সেল্ফ-রেফারেন্স টেবিল (TreeNode/StudyNode) লেভেল ধরে ধরে ঢোকে, তাই
+   প্যারেন্ট সবসময় আগে থাকে — foreign key ভাঙে না।
+4. SQLite (ল্যাপটপ) আগের মতোই deleteMany ব্যবহার করে — লোকাল আচরণ অপরিবর্তিত।
+
+ফলাফল: ১৫২৫ সারির (৪২৫ নোডের ৪-স্তরের ট্রি + ১০০ নোট + ৫০০ কার্ড +
+৫০০ MCQ) ইমপোর্ট লোকালে ০.৩৯ সেকেন্ড। Neon-এ রাউন্ড-ট্রিপ কম হওয়ায় এটি
+আগের চেয়ে অনেক গুণ দ্রুত হবে এবং ৫-সেকেন্ড সীমায় আর আটকাবে না।
+
+পরীক্ষা (লোকাল sqlite): এক্সপোর্ট ২০০ → ২৭ টেবিল খালি → JSON ইমপোর্ট ২০০
+(ok:true, counts 425/100/500/500) → ডেপ্থ বিন্যাস ৫/২০/৮০/৩২০ হুবহু,
+broken FK ০, তারিখ (lastReadAt/dueDate) ঠিক আছে, বাংলা কনটেন্ট অক্ষত।
+Postgres-এর TRUNCATE স্টেটমেন্টের ২৭টি টেবিল-নাম স্কিমার সঙ্গে মিলিয়ে দেখা
+হয়েছে (সব মিলেছে) — তবে আসল Postgres সার্ভারে চালিয়ে দেখা সম্ভব হয়নি।
+
+v7 (অপরিবর্তিত): "শুধু ডেটা এক্সপোর্ট (JSON)" + ৩-মোড ইমপোর্ট রুট।
+
+==========================================
+ BCS Tree-Notebook - Cloud Pack (v7)  ← সর্বশেষ
+==========================================
+Pack build : 2026-10-10 (Bangladesh time)
+ZIP name   : BCS-Notebook-FINAL.zip
+Checks     : tsc (changed files) 0 errors · next build OK · API round-trip tested
+
+v7-এ যা ঠিক হয়েছে — ল্যাপটপ → ক্লাউড ডেটা ট্রান্সফার:
+1. নতুন "শুধু ডেটা এক্সপোর্ট (JSON)" — GET /api/exim/export-data
+   ছোট JSON ফাইল (সব নোট/কার্ড/MCQ/নোটবুক/সেটিংস)। কোনো Blob,
+   কোনো chunk, কোনো সাইজ-লিমিট নেই — তাই Vercel-এ নির্ভরযোগ্যভাবে চলে।
+2. ইমপোর্ট রুট এখন ৩টি মোড বোঝে:
+   (ক) JSON {tables} → সরাসরি ডেটা ইমপোর্ট (নতুন, সবচেয়ে নির্ভরযোগ্য)
+   (খ) JSON {uploadId,total} → চাংক-আপলোড ZIP (আগের ক্লাউড পথ)
+   (গ) raw ZIP body → লোকাল পথ
+   উত্তর এখন { ok, counts, files } রিটার্ন করে।
+3. ব্যাকআপ ডায়ালগ: .zip ও .json দুটোই নেয়; JSON ফাইল হলে সরাসরি
+   application/json হিসেবে POST হয় (ক্লাউড + লোকাল দুটোতেই কাজ করে)।
+4. @vercel/blob 0.27.3 ঠিক করা: put() সবসময় options নেয়
+   ({ addRandomSuffix: false }), access:"public" বাদ (Private store),
+   প্রাইভেট blob পড়তে Authorization: Bearer <token>।
+
+গুরুত্বপূর্ণ: JSON পদ্ধতিতে আপলোড করা PDF/ছবি আসে না (সেগুলো আলাদা করে
+আবার আপলোড করতে হবে)। ফাইলসহ দরকার হলে "সম্পূর্ণ এক্সপোর্ট (ZIP)" ব্যবহার করুন।
+
+পরীক্ষা (লোকাল sqlite): ট্রি/নোট/ফ্ল্যাশকার্ড/MCQ তৈরি → JSON এক্সপোর্ট (200)
+→ ২৭টি টেবিল খালি → JSON ইমপোর্ট (200, ok:true) → সব ডেটা হুবহু ফিরে এসেছে
+(বাংলা কনটেন্টসহ)। ZIP এক্সপোর্ট/ইমপোর্ট পথও আবার পরীক্ষা করা হয়েছে — ঠিক আছে।
+
+==========================================
+ BCS Tree-Notebook - Laptop Pack (v6)
+==========================================
+Pack build : 2026-09-22 0226 (Bangladesh time)
+ZIP name   : BCS-Tree-Notebook-2026-09-22_0226.zip
+Typescript : modified files 0 errors · Next build: OK · Browser-verified (Playwright)
+
+এই বিল্ডের (v6) সংশোধন:
+1. PDF সাধারণ ভিউ (📄 "হাইলাইট ছাড়া") এখন ব্রাউজারের নিজস্ব PDF রিডারে
+   খোলে — ঠিক সেই ডার্ক টুলবার সহ যেটা ট্যাবে PDF খুললে দেখা যায়
+   (1/29 পৃষ্ঠা, জুম, প্রিন্ট, ডাউনলোড)। 📄 চাপলে ফাইল নতুন ট্যাবে
+   top-level URL-এ খোলে, যেখানে ব্রাউজারের built-in viewer নিজেই রেন্ডার
+   করে — তাই আর কোনো ব্রাউজারে "Open" বাটন/ডাউনলোড-ইস্যু আসতে পারে না
+   (আগে iframe-তে embed করা এই সমস্যার কারণ ছিল)।
+   হাইলাইটস ভিউ (🖍️) ১০০% অপরিবর্তিত — আগের যেমন ছিল ঠিক তেমনি:
+   pdf.js রেন্ডারিং + হাইলাইট/আন্ডারলাইন টুলস, দাগ সেভ, জুম সব একই।
+   (v5-এর inline plain-mode সরানো হয়েছে; native iframe কোডও সরানো হয়েছে —
+   এখন একটাই পথ: নতুন ট্যাব।)
+
+2. v4 + v5-এর সব সংশোধনী অপরিবর্তিত: ইংরেজি নেভিগেশন মেনু, Today পেজের
+   বোতাম-সংশোধন, সিলেবাসে ৫-স্তরের প্রস্তুতি ড্রপডাউন।
+
+পরীক্ষা (Playwright, 1440×860): হাইলাইটস ভিউতে মার্ক তৈরি/সেভ ঠিক আছে;
+📄 click → window.open("/api/documents/<id>/file", "_blank", "noopener")
+কল হয়েছে; top-level /file endpoint 200 + application/pdf +
+Content-Disposition: inline সার্ভ করে (ব্রাউজার viewer-এর ঠিক সেই input);
+রিডার পেজে হাইলাইটস ভিউ আনচঞ্জ — ৪/৪ চেক পাস।
+
+==========================================
+ BCS Tree-Notebook - Laptop Pack (v5)
+==========================================
+Pack build : 2026-09-22 0145 (Bangladesh time)
+ZIP name   : BCS-Tree-Notebook-2026-09-22_0145.zip
+Typescript : modified files 0 errors · Next build: OK · Browser-verified (Playwright)
+
+এই বিল্ডের (v5) সংশোধন:
+1. FIX (PDF): পুরো উইন্ডোর রিডারে "সাধারণ ভিউ (হাইলাইট ছাড়া)" (📄) বাটনে
+   ক্লিক করলে কিছু ব্রাউজারে/সেটিংয়ে ফাইল ওপেন না হয়ে শুধু "Open" বাটন দেখাত
+   এবং ক্লিক করলে ফাইল ডাউনলোড হয়ে যেত। কারণ: সাধারণ ভিউ আগে ব্রাউজারের
+   built-in PDF plugin (iframe) ব্যবহার করত — যে plugin "PDF download করুন"
+   সেটিং / PDF extension / external PDF app থাকলে embed করা প্রত্যাখ্যান করে।
+   এখন সাধারণ ভিউ হাইলাইটস ভিউ-র ঠিক একই pdf.js rendering ব্যবহার করে
+   (শুধু হাইলাইট ওভারলে + টুলবার বন্ধ) — তাই আর কোনো ব্রাউজারে "Open"
+   বাটন/ডাউনলোড আসতে পারে না, দৃশ্যমান-গুণ হাইলাইটস ভিউ-র মতোই।
+   জুম, পৃষ্ঠা-কাউন্ট, টেক্সট-কপি সব আগের মতো চলে; সাধারণ ভিউতে লেখা
+   সিলেক্ট করলে হাইলাইট টুলবার আর খুলবে না; 🖍️ চাপলে আগের দাগসহ
+   হাইলাইটস ভিউতে ফেরে। Native iframe এখন শুধু একটা last-resort fallback —
+   যখন pdf.js নিজেই ফাইল লোড করতে ব্যর্থ হয়।
+
+2. v4-এর সব সংশোধনী অপরিবর্তিত: ইংরেজি নেভিগেশন মেনু (Today/Revision/
+   Calendar/Favorites/More…), Today পেজ থেকে লিখিত স্টুডিও/ওয়ার্কস্পেস
+   বোতাম ডিলিট, সিলেবাসে ৫-স্তরের প্রস্তুতি ড্রপডাউন।
+
+পরীক্ষা (Playwright, 1440×860, ২-পৃষ্ঠার টেস্ট PDF): হাইলাইটস ভিউতে টেক্সট
+সিলেক্ট → হাইলাইট টুলবার → মার্ক সেভ (✓ সংরক্ষিত); 📄 সাধারণ ভিউ → কোনো
+iframe তৈরি হয় না, pdf.js পেজ দেখা যায়, হাইলাইট ওভারলে + hint chip লুকানো,
+সিলেক্টে টুলবার খোলে না; 🖍️ → আগের মার্কসহ হাইলাইটস ভিউ; সাধারণ ভিউতে
+জুম ১০০%→১২৫% কাজ করে — ১৮ চেকে ১৭ পাস (১টি চেক টেস্ট-টাইমিং: status chip
+সেভের ঠিক পরে সাময়িক "✓ সংরক্ষিত" দেখাত, অ্যাপ-দিক থেকে নরমাল)।
+
+==========================================
+ BCS Tree-Notebook - Laptop Pack (v4)
+==========================================
+Pack build : 2026-09-22 0131 (Bangladesh time)
+ZIP name   : BCS-Tree-Notebook-2026-09-22_0131.zip
+Typescript : modified files 0 errors · Next build: OK · Browser-verified (Playwright, 32/32)
+
+এই বিল্ডের (v4) সংশোধন:
+1. Navigation menu সম্পূর্ণ ইংরেজি — আজ → Today, রিভিশন → Revision,
+   ক্যালেন্ডার → Calendar, প্রিয় → Favorites, আরও → More; "More" ড্রপডাউনের আইটেম:
+   Written Studio, Weakness Radar, Syllabus Checklist, Current Affairs,
+   Knowledge Graph, Note-Tutor। টুলটিপ/aria-labelসহ সব ইংরেজি।
+   (Dashboard ও Workspace আগেই ইংরেজি ছিল। বাকি সব কন্টেন্ট অপরিবর্তিত।)
+2. "Today" (আজ) পেজের নিচ থেকে "লিখিত স্টুডিও" ও "ওয়ার্কস্পেস" বোতাম ডিলিট —
+   এগুলো আলাদা করে navigation menu-তে আছেই। শুধু "রিভিশন শুরু" বোতাম থাকছে।
+3. সিলেবাস চেকলিস্ট — প্রতিটি নোডের "দুর্বল" চিপের বদলে এখন "প্রস্তুতি" ড্রপডাউন:
+   ৫টি স্তর — অনেক দুর্বল, দুর্বল, মধ্যম, শক্তিশালী, অত্যন্ত শক্তিশালী
+   (রঙিন চিহ্নসহ) + "মুছে ফেলুন" অপশন। "আমার ট্রি-চেকলিস্ট" (লেভেল ১–৬) এবং
+   "অফিসিয়াল সিলেবাস" দুই জায়গাতেই কাজ করে। ডেটা সেভ হয় SyllabusItem.strength
+   কলামে (DB নতুন কলাম — START.bat চালানোর সময় launcher নিজে prisma db push
+   করে, তাই আপনার পুরনো ডেটা হারায় না, অটো-আপডেট হয়)।
+   বাকি স্ট্যাটাস (পড়িনি/পড়ছি/নোট আছে/MCQ আছে/আয়ত্ত) আগের মতোই।
+
+পরীক্ষা (Playwright, 1440×860): নেভেগেশনে ৭টি ইংরেজি ট্যাব + More ড্রপডাউনের ৬টি
+ইংরেজি আইটেম; Today পেজে লিখিত স্টুডিও/ওয়ার্কস্পেস বোতাম নেই, রিভিশন শুরু আছে;
+চেকলিস্টের প্রতিটি নোডে (লেভেল ১/২/৩) প্রস্তুতি ড্রপডাউন, ৫টি অপশন ঠিক ক্রমে,
+নির্বাচন সেভ হয় + রিলোডের পর থেকে যায়, মুছে ফেললে আগের অবস্থায় ফেরে;
+অফিসিয়াল সিলেবাসেও ড্রপডাউন সচল — ৩২/৩২ চেক পাস।
+
+==========================================
+ BCS Tree-Notebook - Laptop Pack (v3)
+==========================================
+Pack build : 2026-09-21 1653 (Bangladesh time)
+ZIP name   : BCS-Tree-Notebook-2026-09-21_1653.zip
+Typescript : my files 0 errors · Next build: OK · Browser-verified (Playwright)
+
+এই বিল্ডের (v3) সংশোধন:
+1. ট্রি সাইডবার — নোডের সম্পূর্ণ নাম এখন সবসময় পূর্ণাঙ্গে দেখা যায় (কোনো "..." নেই):
+   চওড়া প্যানেলে নাম + ৫ বাটন এক লাইনে, সরু প্যানেলে নাম পূর্ণ এক/দুই লাইনে ও ৫ বাটনের
+   টুলবার নিচের লাইনে (ডানে)। লম্বা নাম শব্দে-শব্দে মোড়ে, অক্ষরে-অক্ষরে নয়।
+2. ৫টি অ্যাকশনের নাম এখন ইংরেজিতে (tooltip/aria): Move up, Move down, Add node,
+   Rename, Delete (disabled হলে: "Leaf notes cannot have children" /
+   "Max 6 levels reached — cannot add more")।
+3. সিলেবাস চেকলিস্ট — সাবজেক্ট-ভিত্তিক ড্রপডাউন: ডিফল্টে সব সাবজেক্ট বন্ধ (▸),
+   এক লেভেল করে ▸ দিয়ে খোলে; "সব খুলুন / সব বন্ধ করুন" বাটন আছে। আগের মতোই
+   প্রতিটি নোডে ৬টি স্ট্যাটাস + অটো সিঙ্ক।
+4. নোট এডিটরের নিচের Cross Linking প্যানেল — অটো-ম্যাচ/সাজেশন সম্পূর্ণ বাদ। শুধু
+   "সংযোগ যোগ করুন" + আপনার নিজের যোগ করা সংযোগ থাকে। "সংযোগ যোগ করুন" চাপলে
+   সার্চ না করেই সব নোডের তালিকা (লেভেলসহ) দেখায় — যেকোনো নোডে চাপ দিলেই লিঙ্ক হয়
+   (২+ অক্ষর লিখলে টপিক/নোট/প্রশ্ন/ফাইল সব ধরনে খোঁজে)।
+
+পরীক্ষা (Playwright): সব সারিতে ৫ বাটনের ইংরেজি টুলটিপ (Move up/Move down/Add node/
+Rename/Delete) — ০ টি নাম ছেঁটে হয়েছে; চেকলিস্টে ৯টি সাবজেক্ট বন্ধ অবস্থায় (লেভেল ২ শূন্য),
+একটি খুললে ১ লেভেল, "সব খুলুন" এ লেভেল ৬ পর্যন্ত খোলে; Cross Linking-এ অটো-ম্যাচ নেই,
+পিকারে সব নোড দেখায়; এডিটর (নতুন নোট লিখুন → TipTap) সচল।
+
+Build: 2026-09-21 1618 (Bangladesh time) — Pack: BCS-Tree-Notebook-2026-09-21_1618.zip (v2)
+Typescript : 0 errors · Next build: OK · Browser-verified (Playwright)
+
+এই বিল্ডের (v2) সংশোধন:
+1. ট্রি সাইডবার — লেভেল ১–৬ প্রতিটি নোডের সারিতে এখন সবসময় ৫টি অ্যাকশন স্পষ্টভাবে থাকে:
+   উপরে সরান ↑, নিচে সরান ↓ (প্রান্তে disabled), সন্তান যোগ + (সর্বোচ্চ ৬ লেভেল/লিফ নোটে
+   disabled + টুলটিপ), নাম বদলান ✏, মুছে ট্র্যাশে পাঠান 🗑 — সবসময় দৃশ্যমান, টুলটিপ বাংলা,
+   বাটন পূর্ণ opacity-তে, ডিলিট রং শক্তিশালী। মূল কারণ-সংশোধন: Radix ScrollArea-এর
+   display:table র‍্যাপার (globals.css-এ block করা হয়েছে) + min-w-0/truncate — ফলে দীর্ঘ
+   নাম/গভীর লেভেলে সারি প্যানেলের বাইরে ছড়ায় না আর ডানের বাটন (বিশেষত 🗑) ক্লিপ হয় না।
+2. সিলেবাস চেকলিস্টে নতুন ট্যাব "আমার ট্রি-চেকলিস্ট" (ডিফল্ট) — ইউজারের পুরো ট্রি
+   (লেভেল ১–৬, প্রতিটি নোড) সেকশনভিত্তিক গাছ-কাঠামোয় দেখায়, প্রতি সারিতে "লেভেল ১–৬"
+   ব্যাজ। যেকোনো সাবজেক্টে/লেভেলে নতুন নোড যোগ করলেই সেটি অটো এখানে চলে আসে। প্রতি নোডে
+   ৬টি স্ট্যাটাস: পড়িনি/পড়ছি/নোট আছে/MCQ আছে/দুর্বল/আয়ত্ত — POST /api/syllabus (nodeId
+   upsert) দিয়ে সেভ হয়। নামে চাপ দিলে নোডটি খোলে। "অফিসিয়াল সিলেবাস" ট্যাব আগের মতো
+   আছে (প্রিলি ২০০ / লিখিত ৯০০), কিন্তু এখন ডিফল্ট নয়।
+
+পরীক্ষা (Playwright, 1356×598): ৭টি গভীর (লেভেল ৪–৬) দীর্ঘ-নামের সারিতে ৫/৫ বাটন দৃশ্যমান,
+🗑 প্যানেলের ভেতরে; disabled অবস্থা সঠিক (প্রথম সারিতে ↑, শেষে ↓); চেকলিস্টে ৭০টি
+লেভেল-ব্যাজ-সহ সারি (লেভেল ১–৬), অটো-নোড যোগ দেখা যায়, স্ট্যাটাস চিপ সেভ হয়; এডিটর
+("নতুন নোট লিখুন" → TipTap) আগের মতো চলে।
+
+==========================================
+ BCS Tree-Notebook - Laptop Pack
+==========================================
+Pack build : 2026-09-21 2115 (Bangladesh time)
+ZIP name   : BCS-Tree-Notebook-2026-09-21_2115.zip
+
+FIXES IN THIS PACK (2026-09-21):
+ - MAJOR: Note editor "খুলুন" bug — the typing area of the rich text editor
+   was collapsing to 0 height and the "Cross Linking / সম্পর্কিত কনটেন্ট"
+   suggestion box below it took over the whole note screen (looked like
+   garbled text in every note; could not type/edit, could not make PDFs).
+   The editor now always keeps a real typing area (min height), and on
+   short/small windows the whole note page scrolls instead of crushing.
+ - OCR text insert and History "ফেরান" (restore) did not appear inside the
+   editor, and the next keystroke could permanently erase the restored /
+   OCR text (data loss). External content changes now sync into the
+   editor properly.
+ - Search results for note-content matches showed an empty tree path.
+   Paths now resolve correctly.
+ - Favorite (প্রিয়) button optimistic toggle used a wrong cache key and
+   never engaged. Fixed.
+ - Small type-safety cleanups (cross-links API, MCQ options validator,
+   flashcard pager aria). No user-facing change.
+ - Verified end-to-end in a real browser: open note, type, autosave,
+   reopen, history restore, print/PDF page, search, favorites,
+   cross-link suggestions.
+
+All previous features unchanged (Today, written, syllabus, affairs,
+AI cards, OCR, backup/restore, FIND-NOTES.bat, START.bat auto-find of
+old custom.db, ...). Local/offline only — no cloud accounts.
+
+HOW TO CHECK YOU EXTRACTED THE LATEST ZIP:
+ 1. ZIP name ends with 2026-09-21_2115
+ 2. FIND-NOTES.bat sits next to START.bat
+ 3. START.bat banner prints Pack build : 2026-09-21 2115
+ 4. Opening any note shows a big white typing area under the toolbar
+    (placeholder "এখানে নোট লিখুন…"), with "সম্পর্কিত কনটেন্ট" BELOW it.
+
+This pack includes (from 2026-09-20_2355):
+ - FIX: old notes were stored at C:\home\z\my-project\db\custom.db
+   (because .env pointed at /home/z/my-project/db/custom.db).
+   START.bat now FINDS that file and copies it to db\custom.db.
+ - FIND-NOTES.bat — search the PC for custom.db
+ - All previous + new BCS modules (Today, written, syllabus, …)
+ - Local/offline only — no cloud accounts
